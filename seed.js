@@ -12,14 +12,14 @@ const seed = async () => {
   if(!user) return console.log("Register a user first!");
 
   const items = [];
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 3; i++) { // Changed to 3
     items.push({
-      title: `Test Item ${i}`,
-      description: `This is description for item ${i}`,
-      category: i % 2 === 0 ? 'Electronics' : 'Books',
+      title: i === 1 ? "Black HRX Bag" : i === 2 ? "Student ID Card" : "Blue Water Bottle",
+      description: i === 1 ? "Left near the canteen table." : i === 2 ? "Found near library entrance." : "Steel bottle with a sticker.",
+      category: i === 1 ? 'Bag' : i === 2 ? 'ID Card' : 'Other',
       location: 'Library',
       date: new Date(),
-      type: i % 2 === 0 ? 'lost' : 'found',
+      type: i === 1 ? 'lost' : 'found',
       reportedBy: user._id
     });
   }

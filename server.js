@@ -6,14 +6,17 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const itemRoutes = require('./routes/items');
 const claimRoutes = require('./routes/claims');
+const path = require('path');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/api/auth', authRoutes);
-app.use('/api/items', itemRoutes);
-app.use('/api/claims', claimRoutes);
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/items', require('./routes/items'));
+app.use('/api/claims', require('./routes/claims'));
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 

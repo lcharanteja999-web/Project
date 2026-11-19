@@ -104,35 +104,26 @@ router.post('/register', async (req, res) => {
 });
 
 
-router.post('/login',async(req,res)=>{
-  try{
-    const {email,password} = req.body;
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const user = await User.findOne({email});
-    if(!user){
-      return res.status(400).json({message:'Ivalid credentials'});
-    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const isMatch = await bcrypt.compare(password,user.password);
-    if(!isMatch){
-      return res.status(400).json({message:'Ivalid credentials'});
-    }
-
+    // THIS IS THE CRITICAL PART:
     const token = jwt.sign(
-      {id:user._id,role:user.role},
-      process.env.JWT_SECRET,
-      {expiresIn:'1d'}
+      { id: user._id, role: user.role }, // Make sure 'role' is here!
+      process.env.JWT_SECRET, 
+      { expiresIn: '1d' }
     );
 
-    res.json({token,user:{id:user._id,name:user.name,role:user.role}});
-  }
-  catch(error){
-    res.status(500).json({message:'Server error'});
+    res.json({ token, user: { id: user._id, name: user.name, role: user.role } });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
   }
 });
-
-
-// STEP 9: Export the router
-// This allows us to import and use these routes in server.js
 
 module.exports = router;
